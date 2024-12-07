@@ -18,32 +18,29 @@ The program should read names from the file until there is no more data to read.
 */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 using namespace std;
 
 int main() {
-    int numStudents;
+    ifstream inputFile("LineUp.txt");
     string name, firstInLine, lastInLine;
 
-    do {
-        cout << "Enter the number of students in the class (1 to 25): ";
-        cin >> numStudents;
-        if (numStudents < 1 || numStudents > 25) {
-            cout << "Error: The number of students must be between 1 and 25.\n";
-        }
-    } while (numStudents < 1 || numStudents > 25);
+    if (!inputFile) {
+        cerr << "Error: Could not open the file LineUp.txt.\n";
+        return 1;
+    }
 
-    cout << "Enter the names of the students:\n";
-    for (int i = 1; i <= numStudents; ++i) {
-        cout << "Student " << i << ": ";
-        cin >> name;
+    bool firstEntry = true;
+    while (inputFile >> name) {
 
-        if (i == 1) {
+        if (firstEntry) {
             firstInLine = name;
             lastInLine = name;
+            firstEntry = false;
         }
         else {
-
+ 
             if (name < firstInLine) {
                 firstInLine = name;
             }
@@ -53,11 +50,20 @@ int main() {
         }
     }
 
-    cout << "\nThe student at the front of the line is: " << firstInLine << endl;
-    cout << "The student at the end of the line is: " << lastInLine << endl;
+    inputFile.close();
+
+    if (firstEntry) {
+        cout << "No data found in the file.\n";
+    }
+    else {
+ 
+        cout << "The student at the front of the line is: " << firstInLine << endl;
+        cout << "The student at the end of the line is: " << lastInLine << endl;
+    }
 
     return 0;
 }
+
 
 
 
